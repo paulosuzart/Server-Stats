@@ -1,10 +1,10 @@
-(ns ^{:doc "Reads and stores the values in serverStats.cfg"
+(ns ^{:doc "Reads and stores the values in server-stats.cfg"
       :author "Chris McBride"} 
-  serverStats.config
+  server-stats.config
   (:use [clojure.main :only (load-script)])
   (:gen-class))
 
-(def config-file-name "config file has to be in the same folder" "serverStats.cfg")
+(def config-file-name "config file has to be in the same folder" "server-stats.cfg")
 (def alert-handlers 
   "Map of alert handler name to function. These functions can be used when an alert condition is met. 
    Each function takes 3 arguments: the alertmessage, server name, and output from the command that triggered the alert" 

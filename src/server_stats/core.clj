@@ -1,8 +1,8 @@
-(ns ^{:doc "Runs a set of defined commands in serverStats.cfg, and optionally will trigger an alert if a value meets a defined condition"
+(ns ^{:doc "Runs a set of defined commands in server-stats.cfg, and optionally will trigger an alert if a value meets a defined condition"
       :author "Chris McBride"} 
-  serverStats.core
-  (:require  [parallelSSH.core :as pssh]
-             [serverStats.config :as cfg])
+  server-stats.core
+  (:require  [parallel-ssh.core :as pssh]
+             [server-stats.config :as cfg])
   (:use [clojure.string :only (split split-lines replace-first join)]
         [clojure.tools.cli :only (cli)])
   (:gen-class))
@@ -14,8 +14,8 @@
      :number #(read-string (re-find #"\d+\.?\d*" %))})
 
 (defn check-and-trigger-alerts 
-  [^parallelSSH.core.CommandResult cmdresult 
-   ^serverStats.config.Alert alert]
+  [^parallel_ssh.core.CommandResult cmdresult 
+   ^server_stats.config.Alert alert]
       (let [{:keys [out server]} cmdresult
             make-alert-trigger-checker (fn [condition-tuple]
                                           ;Given a list/tuple containing a boolean operator (eg. <) and a threshold value, make and return a function that takes a single argument
