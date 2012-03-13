@@ -1,13 +1,12 @@
-# serverStats
+# server-stats
 
-FIXME: write description
-
+This is a micro-framework for writing ssh-based commands written in Clojure. Similar to python's Fabric.
 ## Usage
 
 FIXME: write
 
 ## License
 
-Copyright (C) 2011 FIXME
+Copyright (C) 2011 RJMetrics
 
 Distributed under the Eclipse Public License, the same as Clojure.
