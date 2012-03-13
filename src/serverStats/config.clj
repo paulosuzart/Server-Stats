@@ -32,13 +32,13 @@
 
 (defmacro add-alert-handler 
   "Config file function to set alert handler"
-  [handler-name, alert-handler-func]
-    `(swap! alert-handlers assoc ~(keyword handler-name) ~alert-handler-func))
+  [handler-name, handler-args & alert-handler-body]
+    `(swap! alert-handlers assoc ~(keyword handler-name) (fn ~handler-args ~@alert-handler-body)))
 
-(defn set-command-failure-handler
+(defmacro set-command-failure-handler
   "Config file function to set function that gets called on command failure"
-  [cmd-fail-handler-func]
-    (reset! cmd-failure-handler cmd-fail-handler-func))
+  [handler-args & cmd-fail-handler-body]
+    `(reset! cmd-failure-handler (fn ~handler-args ~@cmd-fail-handler-body)))
 
 (defmacro add-cmd
   "This macro is used in the config file to add more commands"
