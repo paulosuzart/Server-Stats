@@ -1,4 +1,4 @@
-(defproject server-stats "1.0.0-SNAPSHOT"
+(defproject server-stats "0.1"
   :description "Framework for ssh-based server stats and monitoring"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.apache.commons/commons-email "1.2"]
