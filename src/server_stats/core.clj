@@ -13,6 +13,25 @@
      :bool #(if (= % "true") true false)
      :number #(read-string (re-find #"\d+\.?\d*" %))})
 
+(defn- sanitize [w]
+  (clojure.string/replace w #"\W+" "_"))
+
+(defn- alert? 
+  "Check if the alert should be activated based on :mute-for key of a Given
+  alert. Stores a file name `(str \".\" (sanitize :alert-msg))` to compare
+  `lastModified`.
+  Since Alerts are unamed, asumes `alert-msg` as unique among alerts."
+  [f-name ms]
+    (let [sf-name (str "." (sanitize f-name))
+          f (clojure.java.io/file sf-name)]
+    (if (.exists f)
+      (let [lmodif (.lastModified f)
+            now    (System/currentTimeMillis)]
+            (< ms (- now lmodif)))
+      (do 
+        (spit sf-name "")
+        true))))
+
 (defn check-and-trigger-alerts 
   [^parallel_ssh.core.CommandResult cmdresult 
    ^server_stats.config.Alert alert]
@@ -22,6 +41,7 @@
                                           (fn [x#] (eval `(~(first condition-tuple) ~x# ~@(rest condition-tuple)))))
             out-lines (split-lines out)
             alert-msg (:msg alert)
+            mute-for (or (:mute-for alert) -1)
             does-value-trigger-alert? (make-alert-trigger-checker (:trigger alert))
             string-to-value ((keyword (:value-type alert)) value-type-parsers)
             is-column-formatted-output? (not (nil? (:column alert)))
@@ -35,7 +55,8 @@
             alert-handler-functions (map #((keyword %) @cfg/alert-handlers) (:handlers alert))]
                 (doseq [row rows-that-triggered-an-alert,
                         handler alert-handler-functions] 
-                  (handler alert-msg server row))))
+                  (and (alert? alert-msg mute-for) 
+                    (handler alert-msg server row)))))
 
 (defn execute-command
   "For every server, run the command, and return the result records"
