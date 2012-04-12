@@ -23,11 +23,13 @@
   Since Alerts are unamed, asumes `alert-msg` as unique among alerts."
   [f-name ms]
     (let [sf-name (str "." (sanitize f-name))
-          f (clojure.java.io/file sf-name)]
+          f       (clojure.java.io/file sf-name)]
     (if (.exists f)
       (let [lmodif (.lastModified f)
             now    (System/currentTimeMillis)]
-            (< ms (- now lmodif)))
+        (do  
+          (.setLastModified f now)
+          (< ms (- now lmodif))))
       (do 
         (spit sf-name "")
         true))))
